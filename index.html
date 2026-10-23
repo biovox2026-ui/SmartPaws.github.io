@@ -270,7 +270,7 @@ let role="view";try{if(localStorage.getItem("smartpaws_role")==="main")role="mai
 const rem={t:0,bt:"",name:"",m:0,by:""};let RH=[],RA=[],xr=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 /* Pega aquí la URL de tu Realtime Database (no es secreta) o configúrala en Conexiones. No pongas contraseñas ni claves secretas en este archivo. */
-const SYNC_DB="",SYNC_KEY="";
+const SYNC_DB="https://smartpaws-67331-default-rtdb.firebaseio.com",SYNC_KEY="";
 let SC={db:SYNC_DB,key:SYNC_KEY};try{const o=JSON.parse(localStorage.getItem("smartpaws_sync")||"{}");if(o.db)SC.db=o.db;if(o.key)SC.key=o.key}catch(e){}
 const dbu=()=>(SC.db||"").trim().replace(/\/+$/,""),STALE=20000,FR="smartpaws_fbr";
 const MYID=(()=>{try{let i=localStorage.getItem("smartpaws_id");if(!i){i=Math.random().toString(36).slice(2,10);localStorage.setItem("smartpaws_id",i)}return i}catch(e){return Math.random().toString(36).slice(2,10)}})();
