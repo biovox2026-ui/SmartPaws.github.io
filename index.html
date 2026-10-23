@@ -295,7 +295,7 @@ function vessel(k){const f=k=="F";return `<svg class="vs" viewBox="0 0 170 262" 
 $("cards").innerHTML=Object.keys(K).map(k=>`<article class="mon gl" id="c${k}" data-k="${k}" data-q="bad" data-low="0"><div class="mh"><h2>${K[k].n}</h2><span class="bd" id="s${k}" data-c="mu">Sin datos</span></div>
 <div class="mb">${vessel(k)}<div class="rd"><div class="pct"><b id="p${k}">—</b><i>%</i></div><small>${K[k].src}</small><small id="n${k}">Sin lectura todavía</small><small id="r${k}">crudo: –</small><small id="x${k}"></small></div></div>
 <p class="why" id="w${k}" data-d="0">Esperando datos de la placa</p><div class="ctl1"><button class="main" id="d${k}" aria-label="Dispensar ${K[k].t}">Dispensar</button></div></article>`).join("");
-function st(k){const s=S[k];if(!s.t)return["Sin datos","mu"];if(lk()!="on")return["Último dato","mu"];if(!live(k))return["Dato obsoleto","warn"];if(!s.v)return["Sin lectura","bad"];if(s.d)return["Apertura ordenada","ac"];if(s.p<=5)return["Vacío","bad"];if(s.p<=40)return["Nivel bajo","warn"];if(s.p>=90)return["Lleno","ok"];return["Normal","ok"]}
+function st(k){const s=S[k];if(!s.t)return["Sin datos","mu"];if(lk()!="on")return["Último dato","mu"];if(!live(k))return["Dato obsoleto","warn"];if(k=="F"&&s.raw!=null&&Number(s.raw)>30)return["Lectura excede el límite","warn"];if(!s.v)return["Sin lectura","bad"];if(s.d)return["Apertura ordenada","ac"];if(s.p<=5)return["Vacío","bad"];if(s.p<=40)return["Nivel bajo","warn"];if(s.p>=90)return["Lleno","ok"];return["Normal","ok"]}
 function ui(k){const s=S[k],[t,c]=st(k),ok=live(k)&&s.v,m=$("c"+k);
  $("q"+k).style.transform="translateY("+((100-(s.p??0))*2)+"px)";
  m.dataset.q=ok?"ok":"bad";m.dataset.low=(ok&&s.p<=40)?1:0;$("p"+k).textContent=s.p==null?"—":s.p;
