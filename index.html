@@ -532,7 +532,7 @@ Object.keys(K).forEach(k=>$("d"+k).onclick=()=>pinOpen(k));
 document.addEventListener("keydown",e=>{if(!dp)return;const b=document.activeElement&&document.activeElement.tagName=="BUTTON";
  if(e.key.length==1&&e.key>="0"&&e.key<="9")pinKey(e.key);else if(e.key=="Backspace"&&!dp.busy&&!dp.sent){dp.pin=dp.pin.slice(0,-1);pinDots()}else if(e.key=="Enter"&&!b)pinOk();else if(e.key=="Escape")pinClose();
  else if(e.key=="Tab"){const f=[...document.querySelectorAll("#pin button")].filter(x=>!x.disabled&&x.offsetParent);if(!f.length)return;const i=f.indexOf(document.activeElement);if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&i==f.length-1){e.preventDefault();f[0].focus()}}});
-const IAPW="314159263",TMRE=/^https:\/\/teachablemachine\.withgoogle\.com\/models\/[A-Za-z0-9_-]+\/?$/;
+const IAPW="314159265",TMRE=/^https:\/\/teachablemachine\.withgoogle\.com\/models\/[A-Za-z0-9_-]+\/?$/;
 let iaOk=false,ifail=0,ilockT=0,iaRows={},iaSaved="";try{iaSaved=localStorage.getItem("smartpaws_ia_url")||""}catch(e){}
 function syncCfg(){[["cthr","thr"],["cn","n"],["ithr","thr"],["icn","n"],["igap","gap"]].forEach(([i,k])=>{const e=$(i);if(e)e.value=cfg[k]})}
 const IAC=(id,t,c)=>{const e=$(id);e.textContent=t;if(c)e.dataset.c=c;else delete e.dataset.c};
