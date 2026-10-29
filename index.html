@@ -270,7 +270,7 @@ let role="view";try{if(localStorage.getItem("smartpaws_role")==="main")role="mai
 const rem={t:0,bt:"",name:"",m:0,by:""};let RH=[],RA=[],xr=0;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 /* Pega aquí la URL de tu Realtime Database (no es secreta) o configúrala en Conexiones. No pongas contraseñas ni claves secretas en este archivo. */
-const SYNC_DB="https://smartpaws-67331-default-rtdb.firebaseio.com",SYNC_KEY="AIzaSyA-43TkCfcuYInTi5x8MhSi7zjhEDB69Bc",SYNC_EMAIL="biovox2026@gmail.com",SYNC_PASS="NORMALSALOMEDAVIDNAYRA";
+const SYNC_DB="https://smartpaws-67331-default-rtdb.firebaseio.com",SYNC_KEY="";
 let SC={db:SYNC_DB,key:SYNC_KEY};try{const o=JSON.parse(localStorage.getItem("smartpaws_sync")||"{}");if(o.db)SC.db=o.db;if(o.key)SC.key=o.key}catch(e){}
 const dbu=()=>(SC.db||"").trim().replace(/\/+$/,""),STALE=20000,FR="smartpaws_fbr";
 const MYID=(()=>{try{let i=localStorage.getItem("smartpaws_id");if(!i){i=Math.random().toString(36).slice(2,10);localStorage.setItem("smartpaws_id",i)}return i}catch(e){return Math.random().toString(36).slice(2,10)}})();
@@ -563,19 +563,9 @@ bindCfg("ithr","thr",50,99);bindCfg("icn","n",1,10);bindCfg("igap","gap",1,10);s
 /* ===== Sincronización (Firebase Realtime Database por REST + SSE; sin SDK ni claves secretas en el HTML) ===== */
 function vlink(){if(subSt!="on"||!rem.t||Date.now()-rem.t>STALE)return"unk";return rem.bt=="on"||rem.bt=="wait"||rem.bt=="off"?rem.bt:"unk"}
 function lk(){return role=="view"?vlink():cst}
-let tokP=null,loginFail=0;
-function fbTok(){return tokP||(tokP=fbTok0().finally(()=>{tokP=null}))}
-async function fbTok0(){
- if(fbt&&Date.now()<fbt.exp)return fbt.id;
- if(!SC.key)return"";
- let r="";try{r=localStorage.getItem(FR)||""}catch(e){}
- if(r){try{const x=await fetch("https://securetoken.googleapis.com/v1/token?key="+encodeURIComponent(SC.key),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=refresh_token&refresh_token="+encodeURIComponent(r)});const j=await x.json();if(x.ok){fbt={id:j.id_token,exp:Date.now()+(+j.expires_in-120)*1000};try{localStorage.setItem(FR,j.refresh_token)}catch(e){}return fbt.id}}catch(e){}}
- if(SYNC_EMAIL&&SYNC_PASS){
-  if(Date.now()<loginFail)throw new Error("inicio de sesión automático fallido; se reintentará en 1 minuto");
-  try{await fbLogin(SYNC_EMAIL,SYNC_PASS)}catch(e){loginFail=Date.now()+60000;throw new Error("no se pudo iniciar sesión automática: "+e.message)}
-  return fbt.id}
- if(r)throw new Error("la sesión de escritura caducó: vuelve a iniciarla en Conexiones");
- return""}
+async function fbTok(){if(fbt&&Date.now()<fbt.exp)return fbt.id;let r="";try{r=localStorage.getItem(FR)||""}catch(e){}if(!r||!SC.key)return"";
+ const x=await fetch("https://securetoken.googleapis.com/v1/token?key="+encodeURIComponent(SC.key),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=refresh_token&refresh_token="+encodeURIComponent(r)});const j=await x.json();if(!x.ok)throw new Error("la sesión de escritura caducó: vuelve a iniciarla en Conexiones");
+ fbt={id:j.id_token,exp:Date.now()+(+j.expires_in-120)*1000};try{localStorage.setItem(FR,j.refresh_token)}catch(e){}return fbt.id}
 async function fbLogin(em,pw){const x=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="+encodeURIComponent(SC.key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:em,password:pw,returnSecureToken:true})});const j=await x.json();if(!x.ok)throw new Error((j.error&&j.error.message)||"error "+x.status);
  fbt={id:j.idToken,exp:Date.now()+(+j.expiresIn-120)*1000};try{localStorage.setItem(FR,j.refreshToken);localStorage.setItem("smartpaws_fbe",em)}catch(e){}}
 async function fbPut(path,data){const u=dbu();if(!u)throw new Error("sin configurar");const t=await fbTok();
